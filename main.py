@@ -43,13 +43,18 @@ def get_words():
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
 
+def get_constellation():
+  fortune = requests.get("http://web.juhe.cn/constellation/getAll?consName=%E7%99%BD%E7%BE%8A%E5%BA%A7&type=today&key=75cea6e79d1d65cddbd71c688f950fb3")
+  return fortune.json()['summary']
 
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
 wea, temperature,high,low = get_weather()
 
+
+
 temMo = str(temperature)+'℃    今日最高:' + str(high)+'℃    最低:'+ str(low)+'℃'
-data = {"weather":{"value":wea},"temperature":{"value":temMo},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+data = {"weather":{"value":wea},"temperature":{"value":temMo},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"horoscope":{"value":get_constellation(), "color":get_random_color()},"words":{"value":get_words(), "color":get_random_color()}}
 res = wm.send_template(user_id, template_id, data)
 print(res)
